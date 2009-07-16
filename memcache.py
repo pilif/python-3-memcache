@@ -198,15 +198,15 @@ class Client(local):
                 name = '%s:%s (%s)' % ( s.ip, s.port, s.weight )
             else:
                 name = 'unix:%s (%s)' % ( s.address, s.weight )
-            s.send_cmd('stats')
+            s.send_cmd(b'stats')
             serverData = {}
-            data.append(( name, serverData ))
+            data.append(( name.encode('ascii'), serverData ))
             readline = s.readline
             while 1:
                 line = readline()
                 if not line or line.strip() == b'END': break
-                stats = line.split(' ', 2)
-                serverData[stats[1]] = stats[2]
+                stats = line.decode('ascii').split(' ', 2)
+                serverData[stats[1].encode('ascii')] = stats[2].encode('ascii')
 
         return(data)
 
@@ -238,7 +238,7 @@ class Client(local):
         'Expire all data currently in the memcache servers.'
         for s in self.servers:
             if not s.connect(): continue
-            s.send_cmd('flush_all')
+            s.send_cmd(b'flush_all')
             s.expect(b"OK")
 
     def debuglog(self, str):
