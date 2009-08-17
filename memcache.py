@@ -901,7 +901,7 @@ class _Host:
             return None
         except socket.error as msg:
             if type(msg) is tuple: msg = msg[1]
-            self.mark_dead("connect: %s" % msg[1])
+            self.mark_dead("connect: %s" % msg)
             return None
         self.socket = s
         self.buffer = b''
